@@ -1,0 +1,12 @@
+/* TRUSTLISTS 0.01 */
+
+Licensed under MIT LICENSE (http://www.opensource.org/licenses/MIT)
+
+Description:
+
+TrustList is a tool for deriving a TrustNet by crawling twitter lists with a given name (e.g. "ows-tusted")
+
+Requirements:
+
+tweepy http://code.google.com/p/tweepy/
+a Twitter read-only auth key (register for one at dev.twitter.com)
