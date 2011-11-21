@@ -1,14 +1,3 @@
-# import tweepy
-# import auth
-# import MySQLdb
-# from datetime import datetime
-# from dateutil.relativedelta import *
-# from settings import *
-# import sys
-# import warnings
-# import logging, logging.handlers
-# import string
-
         
 # SETTINGS
         
