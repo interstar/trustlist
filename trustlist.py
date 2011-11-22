@@ -2,15 +2,10 @@
 # SETTINGS
         
 import tweepy
+import settings
 
-CONSUMER_KEY = ''
-CONSUMER_SECRET = ''
-
-ACCESS_KEY = ''
-ACCESS_SECRET = ''
-
-auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
+auth.set_access_token(settings.ACCESS_KEY, settings.ACCESS_SECRET)
 api = tweepy.API(auth)
         
 # BUILD TRUSTNET
@@ -21,6 +16,8 @@ new_list = []
 def buildList(seed_user, list_name):
 
     users = api.list_members(seed_user,list_name)[0]
+
+    print users
     
     for user in users:
         trust_list.append(user.screen_name.lower())
