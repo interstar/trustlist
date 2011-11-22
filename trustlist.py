@@ -7,6 +7,8 @@ import settings
 auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
 auth.set_access_token(settings.ACCESS_KEY, settings.ACCESS_SECRET)
 api = tweepy.API(auth)
+
+
         
 # BUILD TRUSTNET
 
@@ -17,8 +19,6 @@ def buildList(seed_user, list_name):
 
     users = api.list_members(seed_user,list_name)[0]
 
-    print users
-    
     for user in users:
         trust_list.append(user.screen_name.lower())
 
@@ -54,5 +54,5 @@ def crawlDeeper(list, list_name):
     return new_list
     
 
-print buildList('webisteme', 'punkmoney-trusted')
+print buildList(settings.seed_user, settings.list_name)
         
