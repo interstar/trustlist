@@ -14,5 +14,5 @@ a Twitter read-only auth key (register for one at dev.twitter.com)
 To run:
 
 1. Rename settings_template.py to settings.py
-2. Update the file with your own Twitter API credentials
+2. Update the file with your own API credentials, seed user and list name
 3. Run 'python trustlist.py' from the command line
