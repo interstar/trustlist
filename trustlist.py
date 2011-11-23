@@ -3,12 +3,16 @@
         
 import tweepy
 import settings
+import argparse
 
 auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
 auth.set_access_token(settings.ACCESS_KEY, settings.ACCESS_SECRET)
 api = tweepy.API(auth)
 
-
+parser = argparse.ArgumentParser(description='Get seed and list information')
+parser.add_argument('-s', '--seed', dest='seed_user', default=settings.seed_user)
+parser.add_argument('-l', '--list', dest='list_name', default=settings.list_name)
+args = parser.parse_args()
         
 # BUILD TRUSTNET
 
@@ -69,5 +73,5 @@ def crawlDeeper(list, list_name):
     return new_list
     
 
-print buildList(settings.seed_user, settings.list_name)
+print buildList(args.seed_user, args.list_name)
         
