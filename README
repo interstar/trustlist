@@ -16,3 +16,10 @@ To run:
 1. Rename settings_template.py to settings.py
 2. Update the file with your own API credentials, seed user and list name
 3. Run 'python trustlist.py' from the command line
+
+Reference:
+
+See http://wiki.thenextedge.org/doku.php?id=twitter_trustlists for trust-lists created by members of this project.
+
+
+
