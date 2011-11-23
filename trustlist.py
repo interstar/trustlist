@@ -17,7 +17,13 @@ new_list = []
 
 def buildList(seed_user, list_name):
 
-    users = api.list_members(seed_user,list_name)[0]
+    users = api.list_members(seed_user,list_name)
+
+    # Fix for differences between Phil's and Eli's list_members function. (A tweepy issue?)
+    # Please remove when we've resolved this
+    if not (users[0].__class__.__name__ == "User") :
+        users = users[0]
+    # End of Fix
 
     for user in users:
         trust_list.append(user.screen_name.lower())
@@ -40,7 +46,16 @@ def crawlDeeper(list, list_name):
         print 'checking %s' % user
         user = user.lower()
         try:
-            candidates = api.list_members(user,list_name)[0]
+            candidates = api.list_members(user,list_name)
+
+            # Fix for differences between Phil's and Eli's list_members function. (A tweepy issue?)
+            # Please remove when we've resolved this
+            print candidates
+            if not (candidates[0].__class__.__name__ == "User") :
+                candidates = candidates[0]
+            # End of Fix
+
+
             for candidate in candidates:
                 print '--checking candidate %s isn\'t already in trust list' % candidate.screen_name
                 try:
