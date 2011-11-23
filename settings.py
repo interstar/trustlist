@@ -1,10 +1,10 @@
 ''' Twitter API credentials '''
 
-CONSUMER_KEY = 'WWmfSbD0Mzod7W2wMcxhrQ'
-CONSUMER_SECRET = '0sYSFp9hsiUJRLR5xR9Pcx5yRhj8MLTLHLQDL894gy8'
+CONSUMER_KEY = ''
+CONSUMER_SECRET = ''
 
-ACCESS_KEY = '415040376-jzyCB4EIMra25UDbXrJkUWoxrfWOEbE19z9ahWl7'
-ACCESS_SECRET = 'ftMAdFzVcZ2Ym2yXVkuaUZ2V6iTfoxgJVQBtguczro'
+ACCESS_KEY = ''
+ACCESS_SECRET = ''
 
 ''' Seed list and user '''
 
