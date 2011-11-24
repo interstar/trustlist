@@ -4,6 +4,8 @@
 import tweepy
 import settings
 import argparse
+import useful
+
 
 auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
 auth.set_access_token(settings.ACCESS_KEY, settings.ACCESS_SECRET)
@@ -12,6 +14,8 @@ api = tweepy.API(auth)
 parser = argparse.ArgumentParser(description='Get seed and list information')
 parser.add_argument('-s', '--seed', dest='seed_user', default=settings.seed_user)
 parser.add_argument('-l', '--list', dest='list_name', default=settings.list_name)
+parser.add_argument('-d', '--dot', dest='dot_file_name')
+parser.add_argument('-w', action='store_true',default=False) # generates Phil's web format
 args = parser.parse_args()
         
 # BUILD TRUSTNET
@@ -32,6 +36,7 @@ def get_list(seed_user, list_name) :
         users = []
     return users    
 
+
 def buildList(seed_user, list_name):
 
     users = get_list(seed_user,list_name)
@@ -44,6 +49,9 @@ def buildList(seed_user, list_name):
     while len(new_list) > 0 : new_list = crawlDeeper(new_list, list_name)
         
     # update database
+
+    if args.dot_file_name != None:
+        dotfile.write("}\n")
     
     return trust_list
         
@@ -60,6 +68,7 @@ def crawlDeeper(list, list_name):
 
             for candidate in candidates:
                 print '--checking candidate %s isn\'t already in trust list' % candidate.screen_name
+                dotfile.write("    \"{0}\" -> \"{1}\"\n".format(user, candidate.screen_name.lower()))
                 try:
                     trust_list.index(candidate.screen_name.lower())
                 except:
@@ -70,7 +79,6 @@ def crawlDeeper(list, list_name):
             continue
     return new_list
 
-#print buildList(args.seed_user, args.list_name)
 
 
 # Phil's Alternative Crawler
@@ -81,8 +89,6 @@ def crawlDeeper(list, list_name):
 # This is an experiment, it's quite compact, and closer to the way I tend to write code these days. 
 # See if it's the style you'd like to use
 
-import useful
-visited = useful.SetDict() # a dictionary of sets. We're going to store one set for each "depth" (distance from the root)
 
 def recurse(depth, user_name, list_name) :
     """ The recursive step, crawls the tree and fills the "visited" SetDict.
@@ -100,8 +106,26 @@ def build(user,list_name) :
     """ Call this to start the crawler"""
     visited.insert(0,user)
     recurse(1,user,list_name)
-    
-build(args.seed_user,args.list_name)
-visited.pp()
-           
+
 # End of Phil's alternative
+
+
+
+
+if __name__ == '__main__' :
+
+    if (not args.w) :
+        dotfile = None
+
+        if args.dot_file_name != None:
+            dotfile = open(args.dot_file_name, 'w+')
+            dotfile.write("digraph G {\n")
+
+        print buildList(args.seed_user, args.list_name)
+
+    else :
+        visited = useful.SetDict() # a dictionary of sets. We're going to store one set for each "depth" (distance from the root)
+        build(args.seed_user,args.list_name)
+        visited.pp()
+
+

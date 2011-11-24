@@ -7,6 +7,7 @@
 <?php 
     $user_name = $_GET{"user"};
     $list_name = $_GET{"list"};
+    $recalc = $_GET{"recalc"};
     $f_name = $user_name . "." . $list_name;
     
 ?>
@@ -16,11 +17,18 @@
 
 
 <?php
+
     if (!(file_exists($f_name))) {
-        $com = "python2.4 trustlist.py --seed $user_name --list $list_name > $f_name";
-        echo "<div>$com</div>";
+        echo "<p>File didn't exist ... Creating Trust Network</p>";
+        $com = "python2.4 trustlist.py --seed $user_name --list $list_name > $f_name";        
+        //echo "<div>$com</div>";
         shell_exec($com);
-        echo "<p>File didn't exist ... creating</p>";
+        echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
+    } elseif ($recalc=="1") {
+        echo "<p>Recreating Trust Network</p>";
+        $com = "python2.4 trustlist.py --seed $user_name --list $list_name > $f_name";        
+        shell_exec($com);
+        echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
     } else {
         echo "<div id='cloud'>";
         $lines = file($f_name);
@@ -36,6 +44,7 @@
             }
         }
         echo "</div>";
+        echo "<div><a href='?user=$user_name&list=$list_name&recalc=1'>Reconstruct Network</a></div>";
         
     }
 
