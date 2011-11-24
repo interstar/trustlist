@@ -21,7 +21,7 @@ class SetDict (dict) :
     def pp(self) :
         "Pretty Print"
         for key in self.iterkeys() :
-            print "\n",key
+            print "\n:",key
             for x in self[key] :
                 print x,
         

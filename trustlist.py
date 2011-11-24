@@ -28,7 +28,7 @@ def get_list(seed_user, list_name) :
             users = users[0]
         # End of Fix
     except Exception, e : 
-        print e
+        #print e,e.__class__
         users = []
     return users    
 
@@ -70,7 +70,7 @@ def crawlDeeper(list, list_name):
             continue
     return new_list
 
-print buildList(args.seed_user, args.list_name)
+#print buildList(args.seed_user, args.list_name)
 
 
 # Phil's Alternative Crawler
