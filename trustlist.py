@@ -20,12 +20,16 @@ trust_list = []
 new_list = []
 
 def get_list(seed_user, list_name) :
-    users = api.list_members(seed_user,list_name)
-    # Fix for differences between Phil's and Eli's list_members function. (A tweepy issue?)
-    # Please remove when we've resolved this
-    if not (users[0].__class__.__name__ == "User") :
-        users = users[0]
-    # End of Fix
+    try :
+        users = api.list_members(seed_user,list_name)
+        # Fix for differences between Phil's and Eli's list_members function. (A tweepy issue?)
+        # Please remove when we've resolved this
+        if not (users[0].__class__.__name__ == "User") :
+            users = users[0]
+        # End of Fix
+    except Exception, e : 
+        print e
+        users = []
     return users    
 
 def buildList(seed_user, list_name):
@@ -65,7 +69,39 @@ def crawlDeeper(list, list_name):
         except:
             continue
     return new_list
-    
 
 print buildList(args.seed_user, args.list_name)
-        
+
+
+# Phil's Alternative Crawler
+# An alternative recursive crawler that builds trust-lists into a SetDict (ie. dictionary of sets)
+# One set is created for each layer of depth / distance from the root user
+# The SetDict has a pp (pretty print) which can output data suitable for another program to format (eg. into a web-page)
+
+# This is an experiment, it's quite compact, and closer to the way I tend to write code these days. 
+# See if it's the style you'd like to use
+
+import useful
+visited = useful.SetDict() # a dictionary of sets. We're going to store one set for each "depth" (distance from the root)
+
+def recurse(depth, user_name, list_name) :
+    """ The recursive step, crawls the tree and fills the "visited" SetDict.
+    Breadth-first search. (So that we place people as high as they deserve in the depth tree"""
+    people = [p.screen_name.lower() for p in get_list(user_name,list_name)]
+    queue = []
+    for p in people :
+        if not visited.contains(p) :
+            visited.insert(depth,p)
+            queue.append(p)
+    for p in queue :        
+        recurse(depth+1,p,list_name)
+
+def build(user,list_name) :
+    """ Call this to start the crawler"""
+    visited.insert(0,user)
+    recurse(1,user,list_name)
+    
+build(args.seed_user,args.list_name)
+visited.pp()
+           
+# End of Phil's alternative
