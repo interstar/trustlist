@@ -9,7 +9,8 @@ TrustList is a tool for deriving a TrustNet by recursively crawling twitter list
 Requirements:
 
 tweepy 1.7.1 or later (http://pypi.python.org/pypi/tweepy/)
-a Twitter read-only auth key (register for one at dev.twitter.com)
+a Twitter read-only auth key (register one at http://dev.twitter.com)
+GraphViz for data visualisation (http://www.graphviz.org/)
 
 To run:
 
