@@ -12,6 +12,7 @@ api = tweepy.API(auth)
 parser = argparse.ArgumentParser(description='Get seed and list information')
 parser.add_argument('-s', '--seed', dest='seed_user', default=settings.seed_user)
 parser.add_argument('-l', '--list', dest='list_name', default=settings.list_name)
+parser.add_argument('-d', '--dot', dest='dot_file_name')
 args = parser.parse_args()
         
 # BUILD TRUSTNET
@@ -19,8 +20,13 @@ args = parser.parse_args()
 trust_list = []
 new_list = []
 
-def buildList(seed_user, list_name):
+dotfile = None
 
+if args.dot_file_name != None:
+    dotfile = open(args.dot_file_name, 'w+')
+    dotfile.write("digraph G {\n")
+
+def buildList(seed_user, list_name):
     users = api.list_members(seed_user,list_name)
 
     # Fix for differences between Phil's and Eli's list_members function. (A tweepy issue?)
@@ -38,6 +44,9 @@ def buildList(seed_user, list_name):
     while len(new_list) > 0 : new_list = crawlDeeper(new_list, list_name)
         
     # update database
+
+    if args.dot_file_name != None:
+        dotfile.write("}\n")
     
     return trust_list
         
@@ -62,6 +71,7 @@ def crawlDeeper(list, list_name):
 
             for candidate in candidates:
                 print '--checking candidate %s isn\'t already in trust list' % candidate.screen_name
+                dotfile.write("    \"{0}\" -> \"{1}\"\n".format(user, candidate.screen_name.lower()))
                 try:
                     trust_list.index(candidate.screen_name.lower())
                 except:
