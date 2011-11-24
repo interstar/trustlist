@@ -12,7 +12,7 @@
 ?>
 
 <h1>The Next Edge : TrustNet</h1>
-<h2><?php echo "$user_name : $list_name"; ?></h2>
+<h2><?php echo "$user_name : <a href='http://wiki.thenextedge.org/doku.php?id=twitter_trustlists'>$list_name</a>"; ?></h2>
 
 
 <?php
