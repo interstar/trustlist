@@ -17,6 +17,16 @@ To run:
 2. Update the file with your own API credentials, seed user and list name
 3. Run 'python trustlist.py' from the command line
 
+Command Line Options:
+-s --seed <user>            Override the settings.py seed user
+-l --list <list>            Override the settings.py list name
+-d --dot <dot file name>    Output crawled TrustNet as .dot file for graphviz use
+
+Graphviz example:
+python trustlist.py --list TNE-github --dot 1mentat_tne-github.dot
+dot -Tpng -O 1mentat_tne-github.dot 
+open 1mentat_tne-github.dot.png
+
 Reference:
 
 See http://wiki.thenextedge.org/doku.php?id=twitter_trustlists for trust-lists created by members of this project.
