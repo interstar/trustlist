@@ -59,6 +59,14 @@
 
 ?>
 
+<h2>Search Again</h2>
+<div>
+<form method="GET" action="/">
+    <p>User Name : <input type="text" name="user"/></p>
+    <p>List Name : <input type="text" name="list"/></p>
+    <input type="submit"/>
+</form>
+</div>
 </body>
 
 </html>
