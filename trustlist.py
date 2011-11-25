@@ -17,6 +17,8 @@ parser.add_argument('-l', '--list', dest='list_name', default=settings.list_name
 parser.add_argument('-d', '--dot', dest='dot_file_name')
 parser.add_argument('-w', action='store_true',default=False) # generates Phil's web format
 args = parser.parse_args()
+
+dotfile = None
         
 # BUILD TRUSTNET
 
@@ -32,7 +34,7 @@ def get_list(seed_user, list_name) :
             users = users[0]
         # End of Fix
     except Exception, e : 
-        #print e,e.__class__
+        print e,e.__class__
         users = []
     return users    
 
@@ -92,10 +94,11 @@ def crawlDeeper(list, list_name):
 
 def recurse(depth, user_name, list_name) :
     """ The recursive step, crawls the tree and fills the "visited" SetDict.
-    Breadth-first search. (So that we place people as high as they deserve in the depth tree"""
+    Breadth-first search. (So that we place people as high as they deserve in the depth tree)"""
     people = [p.screen_name.lower() for p in get_list(user_name,list_name)]
     queue = []
     for p in people :
+        if dotfile : dotfile.write('    "%s" -> "%s"\n' % (user_name,p))
         if not visited.contains(p) :
             visited.insert(depth,p)
             queue.append(p)
@@ -111,21 +114,21 @@ def build(user,list_name) :
 
 
 
-
 if __name__ == '__main__' :
 
+    if args.dot_file_name != None:
+        dotfile = open(args.dot_file_name, 'w+')
+        dotfile.write("digraph G {\n")
+
     if (not args.w) :
-        dotfile = None
-
-        if args.dot_file_name != None:
-            dotfile = open(args.dot_file_name, 'w+')
-            dotfile.write("digraph G {\n")
-
         print buildList(args.seed_user, args.list_name)
 
     else :
         visited = useful.SetDict() # a dictionary of sets. We're going to store one set for each "depth" (distance from the root)
         build(args.seed_user,args.list_name)
-        visited.pp()
 
+        if args.dot_file_name != None:
+            dotfile.write("}\n")
+        
+        visited.pp()
 

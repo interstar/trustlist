@@ -22,20 +22,19 @@
 ?>
 
 <h1>The Next Edge : TrustNet</h1>
-<h2><?php echo "$user_name : <a href='http://wiki.thenextedge.org/doku.php?id=twitter_trustlists'>$list_name</a>"; ?></h2>
+<h2>Who does <?php echo "$user_name trust in the context of <a href='http://wiki.thenextedge.org/doku.php?id=twitter_trustlists'>$list_name</a>?"; ?></h2>
 
 
 <?php
+    $com = "python2.4 trustlist.py --seed $user_name --list $list_name -w --dot $f_name.dot > $f_name";        
 
     if (!(file_exists($f_name))) {
         echo "<p>File didn't exist ... Creating Trust Network</p>";
-        $com = "python2.4 trustlist.py --seed $user_name --list $list_name > $f_name";        
         //echo "<div>$com</div>";
         shell_exec($com);
         echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
     } elseif ($recalc=="1") {
         echo "<p>Recreating Trust Network</p>";
-        $com = "python2.4 trustlist.py --seed $user_name --list $list_name > $f_name";        
         shell_exec($com);
         echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
     } else {
@@ -58,6 +57,14 @@
     }
 
 ?>
+
+<h2>Visualise</h2>
+<?php
+    $lines=file($f_name.".dot");
+    $dot = implode("",$lines);
+    echo "<div><img src='http://chart.googleapis.com/chart?cht=gv&chl=$dot&chs=400x300'/></div>";
+?>
+
 
 <h2>Search Again</h2>
 <div>
