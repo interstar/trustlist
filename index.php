@@ -9,7 +9,16 @@
     $list_name = $_GET{"list"};
     $recalc = $_GET{"recalc"};
     $f_name = $user_name . "." . $list_name;
+ 
+    $white = "/\A([a-zA-Z0-9-])*\z/";
+
+    if (!(preg_match($white,$user_name,$matches))) {
+        exit("<p>Invalid user name</p>");
+    }
     
+    if (!(preg_match($white,$list_name,$matches))) {
+        exit("<p>Invalid list name</p>");   
+    }
 ?>
 
 <h1>The Next Edge : TrustNet</h1>
