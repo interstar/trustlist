@@ -45,6 +45,7 @@
             if ($line[0] == ":") {
                 $depth = $depth+1;
             } else {
+                if ($depth < 0) { continue; }
                 $names = split(" ",$line);
                 foreach ($names as $name) {
                     echo "<span class='d$depth'><a href='http://twitter.com/#!/$name'>$name</a> </span>";
@@ -58,21 +59,24 @@
 
 ?>
 
-<h2>Visualise</h2>
 <?php
-    $lines=file($f_name.".dot");
-    $dot = implode("",$lines);
-    echo "<div><img src='http://chart.googleapis.com/chart?cht=gv&chl=$dot&chs=400x300'/></div>";
+    $dName = $f_name . ".dot";
+    if (file_exists($dName)) {
+        echo "<h2>Visualise</h2>";
+        $lines=file($dName);
+        $dot = implode("",$lines);
+        $high = intval($depth)*200;
+        echo "<div><img src='http://chart.googleapis.com/chart?cht=gv&chl=$dot'/></div>";        
+    }
 ?>
 
-
-<h2>Search Again</h2>
-<div>
-<form method="GET" action="/">
-    <p>User Name : <input type="text" name="user"/></p>
-    <p>List Name : <input type="text" name="list"/></p>
-    <input type="submit"/>
-</form>
+<div id="searchForm">
+    <h2>Search Again</h2>
+    <form method="GET" action="/">
+        <p>User Name : <input type="text" name="user"/></p>
+        <p>List Name : <input type="text" name="list"/></p>
+        <input type="submit"/>
+    </form>
 </div>
 </body>
 

@@ -6,6 +6,8 @@ import settings
 import argparse
 import useful
 
+import netdb
+import datetime
 
 auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
 auth.set_access_token(settings.ACCESS_KEY, settings.ACCESS_SECRET)
@@ -16,6 +18,8 @@ parser.add_argument('-s', '--seed', dest='seed_user', default=settings.seed_user
 parser.add_argument('-l', '--list', dest='list_name', default=settings.list_name)
 parser.add_argument('-d', '--dot', dest='dot_file_name')
 parser.add_argument('-w', action='store_true',default=False) # generates Phil's web format
+parser.add_argument('-n', '--net', dest='net_file_name')
+
 args = parser.parse_args()
 
 dotfile = None
@@ -24,6 +28,8 @@ dotfile = None
 
 trust_list = []
 new_list = []
+dotfile = None
+netfile = None
 
 def get_list(seed_user, list_name) :
     try :
@@ -56,8 +62,7 @@ def buildList(seed_user, list_name):
         dotfile.write("}\n")
     
     return trust_list
-        
-        
+
 # CRAWL DEEPER (only call from buildList())
 
 def crawlDeeper(list, list_name):
@@ -70,7 +75,14 @@ def crawlDeeper(list, list_name):
 
             for candidate in candidates:
                 print '--checking candidate %s isn\'t already in trust list' % candidate.screen_name
-                dotfile.write("    \"{0}\" -> \"{1}\"\n".format(user, candidate.screen_name.lower()))
+#makeobservation('interstar','1mentat', 'tne-github', datetime.datetime.now())
+                try:
+                    netdb.makeobservation(user, candidate.screen_name.lower(), list_name, datetime.datetime.now())
+                except:
+                    print "Unexpected error:", sys.exc_info()[0]
+                    print "netdb observation failed"
+                if args.dot_file_name != None:
+                    dotfile.write("    \"{0}\" -> \"{1}\"\n".format(user, candidate.screen_name.lower()))
                 try:
                     trust_list.index(candidate.screen_name.lower())
                 except:
@@ -84,9 +96,10 @@ def crawlDeeper(list, list_name):
 
 
 # Phil's Alternative Crawler
-# An alternative recursive crawler that builds trust-lists into a SetDict (ie. dictionary of sets)
+# An alternative recursive crawler (not using build_list and crawl_deeper) that builds trust-lists into a SetDict (ie. dictionary of sets)
 # One set is created for each layer of depth / distance from the root user
 # The SetDict has a pp (pretty print) which can output data suitable for another program to format (eg. into a web-page)
+# This also updates the .dot file
 
 # This is an experiment, it's quite compact, and closer to the way I tend to write code these days. 
 # See if it's the style you'd like to use
@@ -121,9 +134,16 @@ if __name__ == '__main__' :
         dotfile.write("digraph G {\n")
 
     if (not args.w) :
+        # Use James / Eli's original code
+        netdb.setupdb()
         print buildList(args.seed_user, args.list_name)
+        if args.net_file_name != None:
+            graph = netdb.rendergraph(args.list_name)
+            netfile = open(args.net_file_name, 'w+')
+            netfile.write(graph)
 
     else :
+        # my alternative (used in current web-based test)
         visited = useful.SetDict() # a dictionary of sets. We're going to store one set for each "depth" (distance from the root)
         build(args.seed_user,args.list_name)
 
@@ -131,4 +151,5 @@ if __name__ == '__main__' :
             dotfile.write("}\n")
         
         visited.pp()
+
 
