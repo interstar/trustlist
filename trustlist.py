@@ -75,7 +75,7 @@ def crawlDeeper(list, list_name):
 
             for candidate in candidates:
                 print '--checking candidate %s isn\'t already in trust list' % candidate.screen_name
-#makeobservation('interstar','1mentat', 'tne-github', datetime.datetime.now())
+                #makeobservation('interstar','1mentat', 'tne-github', datetime.datetime.now())
                 try:
                     netdb.makeobservation(user, candidate.screen_name.lower(), list_name, datetime.datetime.now())
                 except:
