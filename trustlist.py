@@ -22,8 +22,7 @@ parser.add_argument('-n', '--net', dest='net_file_name')
 
 args = parser.parse_args()
 
-dotfile = None
-        
+       
 # BUILD TRUSTNET
 
 trust_list = []
@@ -40,7 +39,7 @@ def get_list(seed_user, list_name) :
             users = users[0]
         # End of Fix
     except Exception, e : 
-        print e,e.__class__
+        #print e,e.__class__
         users = []
     return users    
 
@@ -104,6 +103,7 @@ def crawlDeeper(list, list_name):
 # This is an experiment, it's quite compact, and closer to the way I tend to write code these days. 
 # See if it's the style you'd like to use
 
+visited = useful.SetDict()
 
 def recurse(depth, user_name, list_name) :
     """ The recursive step, crawls the tree and fills the "visited" SetDict.
