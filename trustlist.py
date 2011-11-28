@@ -4,6 +4,8 @@
 import tweepy
 import settings
 import argparse
+import netdb
+import datetime
 
 auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
 auth.set_access_token(settings.ACCESS_KEY, settings.ACCESS_SECRET)
@@ -13,6 +15,7 @@ parser = argparse.ArgumentParser(description='Get seed and list information')
 parser.add_argument('-s', '--seed', dest='seed_user', default=settings.seed_user)
 parser.add_argument('-l', '--list', dest='list_name', default=settings.list_name)
 parser.add_argument('-d', '--dot', dest='dot_file_name')
+parser.add_argument('-n', '--net', dest='net_file_name')
 args = parser.parse_args()
         
 # BUILD TRUSTNET
@@ -21,6 +24,7 @@ trust_list = []
 new_list = []
 
 dotfile = None
+netfile = None
 
 if args.dot_file_name != None:
     dotfile = open(args.dot_file_name, 'w+')
@@ -71,7 +75,14 @@ def crawlDeeper(list, list_name):
 
             for candidate in candidates:
                 print '--checking candidate %s isn\'t already in trust list' % candidate.screen_name
-                dotfile.write("    \"{0}\" -> \"{1}\"\n".format(user, candidate.screen_name.lower()))
+#makeobservation('interstar','1mentat', 'tne-github', datetime.datetime.now())
+                try:
+                    netdb.makeobservation(user, candidate.screen_name.lower(), list_name, datetime.datetime.now())
+                except:
+                    print "Unexpected error:", sys.exc_info()[0]
+                    print "netdb observation failed"
+                if args.dot_file_name != None:
+                    dotfile.write("    \"{0}\" -> \"{1}\"\n".format(user, candidate.screen_name.lower()))
                 try:
                     trust_list.index(candidate.screen_name.lower())
                 except:
@@ -82,6 +93,10 @@ def crawlDeeper(list, list_name):
             continue
     return new_list
     
-
+netdb.setupdb()
 print buildList(args.seed_user, args.list_name)
-        
+
+if args.net_file_name != None:
+    graph = netdb.rendergraph(args.list_name)
+    netfile = open(args.net_file_name, 'w+')
+    netfile.write(graph)
