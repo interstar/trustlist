@@ -4,6 +4,8 @@
 import tweepy
 import settings
 import argparse
+import useful
+
 import netdb
 import datetime
 
@@ -15,30 +17,36 @@ parser = argparse.ArgumentParser(description='Get seed and list information')
 parser.add_argument('-s', '--seed', dest='seed_user', default=settings.seed_user)
 parser.add_argument('-l', '--list', dest='list_name', default=settings.list_name)
 parser.add_argument('-d', '--dot', dest='dot_file_name')
+parser.add_argument('-w', action='store_true',default=False) # generates Phil's web format
 parser.add_argument('-n', '--net', dest='net_file_name')
+
 args = parser.parse_args()
-        
+
+       
 # BUILD TRUSTNET
 
 trust_list = []
 new_list = []
-
 dotfile = None
 netfile = None
 
-if args.dot_file_name != None:
-    dotfile = open(args.dot_file_name, 'w+')
-    dotfile.write("digraph G {\n")
+def get_list(seed_user, list_name) :
+    try :
+        users = api.list_members(seed_user,list_name)
+        # Fix for differences between Phil's and Eli's list_members function. (A tweepy issue?)
+        # Please remove when we've resolved this
+        if not (users[0].__class__.__name__ == "User") :
+            users = users[0]
+        # End of Fix
+    except Exception, e : 
+        #print e,e.__class__
+        users = []
+    return users    
+
 
 def buildList(seed_user, list_name):
-    users = api.list_members(seed_user,list_name)
 
-    # Fix for differences between Phil's and Eli's list_members function. (A tweepy issue?)
-    # Please remove when we've resolved this
-    if not (users[0].__class__.__name__ == "User") :
-        users = users[0]
-    # End of Fix
-
+    users = get_list(seed_user,list_name)
     for user in users:
         trust_list.append(user.screen_name.lower())
 
@@ -53,8 +61,7 @@ def buildList(seed_user, list_name):
         dotfile.write("}\n")
     
     return trust_list
-        
-        
+
 # CRAWL DEEPER (only call from buildList())
 
 def crawlDeeper(list, list_name):
@@ -63,15 +70,7 @@ def crawlDeeper(list, list_name):
         print 'checking %s' % user
         user = user.lower()
         try:
-            candidates = api.list_members(user,list_name)
-
-            # Fix for differences between Phil's and Eli's list_members function. (A tweepy issue?)
-            # Please remove when we've resolved this
-            print candidates
-            if not (candidates[0].__class__.__name__ == "User") :
-                candidates = candidates[0]
-            # End of Fix
-
+            candidates = get_list(user,list_name)
 
             for candidate in candidates:
                 print '--checking candidate %s isn\'t already in trust list' % candidate.screen_name
@@ -92,11 +91,65 @@ def crawlDeeper(list, list_name):
         except:
             continue
     return new_list
-    
-netdb.setupdb()
-print buildList(args.seed_user, args.list_name)
 
-if args.net_file_name != None:
-    graph = netdb.rendergraph(args.list_name)
-    netfile = open(args.net_file_name, 'w+')
-    netfile.write(graph)
+
+
+# Phil's Alternative Crawler
+# An alternative recursive crawler (not using build_list and crawl_deeper) that builds trust-lists into a SetDict (ie. dictionary of sets)
+# One set is created for each layer of depth / distance from the root user
+# The SetDict has a pp (pretty print) which can output data suitable for another program to format (eg. into a web-page)
+# This also updates the .dot file
+
+# This is an experiment, it's quite compact, and closer to the way I tend to write code these days. 
+# See if it's the style you'd like to use
+
+visited = useful.SetDict()
+
+def recurse(depth, user_name, list_name) :
+    """ The recursive step, crawls the tree and fills the "visited" SetDict.
+    Breadth-first search. (So that we place people as high as they deserve in the depth tree)"""
+    people = [p.screen_name.lower() for p in get_list(user_name,list_name)]
+    queue = []
+    for p in people :
+        if dotfile : dotfile.write('    "%s" -> "%s"\n' % (user_name,p))
+        if not visited.contains(p) :
+            visited.insert(depth,p)
+            queue.append(p)
+    for p in queue :        
+        recurse(depth+1,p,list_name)
+
+def build(user,list_name) :
+    """ Call this to start the crawler"""
+    visited.insert(0,user)
+    recurse(1,user,list_name)
+
+# End of Phil's alternative
+
+
+
+if __name__ == '__main__' :
+
+    if args.dot_file_name != None:
+        dotfile = open(args.dot_file_name, 'w+')
+        dotfile.write("digraph G {\n")
+
+    if (not args.w) :
+        # Use James / Eli's original code
+        netdb.setupdb()
+        print buildList(args.seed_user, args.list_name)
+        if args.net_file_name != None:
+            graph = netdb.rendergraph(args.list_name)
+            netfile = open(args.net_file_name, 'w+')
+            netfile.write(graph)
+
+    else :
+        # my alternative (used in current web-based test)
+        visited = useful.SetDict() # a dictionary of sets. We're going to store one set for each "depth" (distance from the root)
+        build(args.seed_user,args.list_name)
+
+        if args.dot_file_name != None:
+            dotfile.write("}\n")
+        
+        visited.pp()
+
+
