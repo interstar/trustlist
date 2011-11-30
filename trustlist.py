@@ -112,6 +112,7 @@ def recurse(depth, user_name, list_name) :
     queue = []
     for p in people :
         if dotfile : dotfile.write('    "%s" -> "%s"\n' % (user_name,p))
+        netdb.makeobservation(user_name, p, list_name, datetime.datetime.now())
         if not visited.contains(p) :
             visited.insert(depth,p)
             queue.append(p)
@@ -131,7 +132,8 @@ if __name__ == '__main__' :
 
     if args.dot_file_name != None:
         dotfile = open(args.dot_file_name, 'w+')
-        dotfile.write("digraph G {\n")
+
+    if dotfile : dotfile.write("digraph G {\n")
 
     if (not args.w) :
         # Use James / Eli's original code
@@ -144,11 +146,18 @@ if __name__ == '__main__' :
 
     else :
         # my alternative (used in current web-based test)
+
+        netdb.setupdb()
+        
         visited = useful.SetDict() # a dictionary of sets. We're going to store one set for each "depth" (distance from the root)
         build(args.seed_user,args.list_name)
 
-        if args.dot_file_name != None:
-            dotfile.write("}\n")
+        if dotfile : dotfile.write("}\n")
+
+        if args.net_file_name != None:
+            graph = netdb.rendergraph(args.list_name)
+            netfile = open(args.net_file_name, 'w+')
+            netfile.write(graph)
         
         visited.pp()
 

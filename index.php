@@ -30,7 +30,7 @@
 
 
 <?php
-    $com = "python2.4 trustlist.py --seed $user_name --list $list_name -w --dot $f_name.dot > $f_name";        
+    $com = "python2.4 trustlist.py --seed $user_name --list $list_name -w --dot $f_name.dot --net $f_name.net> $f_name";
 
     if (!(file_exists($f_name))) {
         echo "<p class=\"message\">File didn't exist ... Creating Trust Network</p>";
@@ -68,8 +68,17 @@
 <?php
     $dName = $f_name . ".dot";
     if (file_exists($dName)) {
-        echo "<h2>Visualise</h2>";
+        echo "<h2>Current Graph</h2>";
         $lines=file($dName);
+        $dot = implode("",$lines);
+        $high = intval($depth)*200;
+        echo "<div><img src='http://chart.googleapis.com/chart?cht=gv&chl=$dot'/></div>";        
+    }
+
+    $nName = $f_name . ".net";
+    if (file_exists($nName)) {
+        echo "<h2>Historical Graph</h2>";
+        $lines=file($nName);
         $dot = implode("",$lines);
         $high = intval($depth)*200;
         echo "<div><img src='http://chart.googleapis.com/chart?cht=gv&chl=$dot'/></div>";        
