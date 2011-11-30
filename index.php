@@ -10,7 +10,7 @@
     $recalc = $_GET{"recalc"};
     $f_name = $user_name . "." . $list_name;
  
-    $white = "/\A([a-zA-Z0-9-])*\z/";
+    $white = "/\A([a-zA-Z0-9-_]){1,15}\z/";
 
     if (!(preg_match($white,$user_name,$matches))) {
         exit("<p>Invalid user name</p>");
