@@ -10,14 +10,18 @@
     $recalc = $_GET{"recalc"};
     $f_name = $user_name . "." . $list_name;
  
-    $white = "/\A([a-zA-Z0-9-_]){1,15}\z/";
+    $userwhite = "/\A([a-zA-Z0-9_]){1,15}\z/";
 
-    if (!(preg_match($white,$user_name,$matches))) {
-        exit("<p>Invalid user name</p>");
+    #This is actually not complete, apparently almost all characters are allowed.
+    #We can use this more restrictive set though.
+    $listwhite = "/\A([a-zA-Z0-9-_]){1,25}\z/";
+
+    if (!(preg_match($userwhite,$user_name,$matches))) {
+        exit("<p class=\"error\">Invalid user name</p>");
     }
     
-    if (!(preg_match($white,$list_name,$matches))) {
-        exit("<p>Invalid list name</p>");   
+    if (!(preg_match($listwhite,$list_name,$matches))) {
+        exit("<p class=\"error\">Invalid list name</p>");   
     }
 ?>
 
@@ -29,13 +33,15 @@
     $com = "python2.4 trustlist.py --seed $user_name --list $list_name -w --dot $f_name.dot > $f_name";        
 
     if (!(file_exists($f_name))) {
-        echo "<p>File didn't exist ... Creating Trust Network</p>";
+        echo "<p class=\"message\">File didn't exist ... Creating Trust Network</p>";
         //echo "<div>$com</div>";
         shell_exec($com);
+        echo "<meta http-equiv=\"refresh\" content=\"5\"/>" #autorefresh in 5 seconds
         echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
     } elseif ($recalc=="1") {
-        echo "<p>Recreating Trust Network</p>";
+        echo "<p class=\"message\">Recreating Trust Network</p>";
         shell_exec($com);
+        echo "<meta http-equiv=\"refresh\" content=\"5\"/>" #autorefresh in 5 seconds
         echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
     } else {
         echo "<div id='cloud'>";
