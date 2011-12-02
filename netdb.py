@@ -57,19 +57,19 @@ def setupdb() :
 
     print "Checking DB setup"
     try:
-        c.execute('''create table observations (suserid integer, tuserid integer, netid integer, observation datetime)''')
+        c.execute('''create table if not exists observations (suserid integer, tuserid integer, netid integer, observation datetime)''')
         conn.commit()
     except:
         print "Exception on create observations"
 
     try:
-        c.execute('''create table users (userid integer primary key, twitter_user text unique)''')
+        c.execute('''create table if not exists users (userid integer primary key, twitter_user text unique)''')
         conn.commit()
     except:
         print "Exception on create users"
 
     try:
-        c.execute('''create table netids (netid integer primary key, twitter_list text unique)''')
+        c.execute('''create table if not exists netids (netid integer primary key, twitter_list text unique)''')
         conn.commit()
     except:
         print "Exception on create netids"
@@ -98,7 +98,7 @@ def getlatestnet ( net ) :
         for row in rows:
             c.execute("select suserid, tuserid, max(observation) from observations where netid=? and suserid=? and tuserid=?",(netid,row[0],row[1],))
             link = c.fetchall()
-            links += "    \"{0}\" -> \"{1}\"\n".format(getusername(link[0][0]),getusername(link[0][1]))
+            links += "    \"{0}\" -> \"{1}\";\n".format(getusername(link[0][0]),getusername(link[0][1]))
         return links
     except:
         print "Unexpected error:", sys.exc_info()[0]
@@ -111,7 +111,7 @@ def getnetparticipants ( net ) :
         c.execute("select suserid from observations where netid=? union select tuserid from observations where netid=?",(netid,netid,))
         rows = c.fetchall()
         for row in rows:
-            people += "    \"{0}\" [label = \"{0}\" href = \"javascript:void(window.open(\\\"http://twitter.com/#!/{0}\\\"))\"]\n".format(getusername(row[0]))
+            people += "    \"{0}\" [label=\"{0}\" URL=\"javascript:void(window.open(\\\"http://twitter.com/#!/{0}\\\"))\"];\n".format(getusername(row[0]))
         return people
     except:
         print "Unexpected error:", sys.exc_info()[0]

@@ -2,6 +2,18 @@ h1, h2, body {
     font-family:sans;
 }
 
+p.error
+{
+    color:red;
+    font-weight:bold;
+}
+
+p.message
+{
+    font-weight:bold;
+}
+
+
 .d-1 { visibility:hidden; }
 .d0 { font-size:3em; }
 .d1 { font-size:2.5em; }
