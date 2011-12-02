@@ -30,18 +30,18 @@
 
 
 <?php
-    $com = "python2.4 trustlist.py --seed $user_name --list $list_name -w --dot $f_name.dot --net $f_name.net> $f_name";
-
+    $com = "python2.6 trustlist2.py --seed $user_name --list $list_name -w --dot $f_name.dot --net $f_name.net > $f_name";
+    echo "<!-- $com -->";
+    
     if (!(file_exists($f_name))) {
-        echo "<p class=\"message\">File didn't exist ... Creating Trust Network</p>";
-        //echo "<div>$com</div>";
+        echo "<p class=\"message\">File didn't exist ... Creating Trust Network</p>"; 
         shell_exec($com);
-        echo "<meta http-equiv=\"refresh\" content=\"5\"/>" #autorefresh in 5 seconds
+        echo "<meta http-equiv=\"refresh\" content=\"5\"/>"; #autorefresh in 5 seconds
         echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
     } elseif ($recalc=="1") {
         echo "<p class=\"message\">Recreating Trust Network</p>";
         shell_exec($com);
-        echo "<meta http-equiv=\"refresh\" content=\"5\"/>" #autorefresh in 5 seconds
+        echo "<meta http-equiv=\"refresh\" content=\"5\"/>"; #autorefresh in 5 seconds
         echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
     } else {
         echo "<div id='cloud'>";
@@ -75,7 +75,7 @@
         echo "<div><img src='http://chart.googleapis.com/chart?cht=gv&chl=$dot'/></div>";        
     }
 
-    $nName = $f_name . ".net";
+    $nName = $f_name . ".dot";
     if (file_exists($nName)) {
         echo "<h2>Historical Graph</h2>";
         $lines=file($nName);
