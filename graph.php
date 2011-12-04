@@ -3,7 +3,7 @@
   $list_name = $_GET{"list"};
 
   $f_name = $user_name . "." . $list_name;
-  $dName = $f_name . ".net";
+  $dName = $f_name . ".dot";
 
   $userwhite = "/\A([a-zA-Z0-9_]){1,15}\z/";
   $listwhite = "/\A([a-zA-Z0-9-_]){1,25}\z/";
