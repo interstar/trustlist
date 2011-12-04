@@ -1,15 +1,23 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="style.css" />
-</head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> 
 
-<body>
 <?php 
     $user_name = $_GET{"user"};
     $list_name = $_GET{"list"};
     $recalc = $_GET{"recalc"};
     $f_name = $user_name . "." . $list_name;
- 
+
+    $dName = $f_name . ".dot";
+?>
+
+</head>
+
+<body>
+
+<?php 
     $userwhite = "/\A([a-zA-Z0-9_]){1,15}\z/";
 
     #This is actually not complete, apparently almost all characters are allowed.
@@ -59,31 +67,17 @@
             }
         }
         echo "</div>";
-        echo "<div><a href='?user=$user_name&list=$list_name&recalc=1'>Reconstruct Network</a></div>";
-        
+        echo "<div><a href='?user=$user_name&list=$list_name&recalc=1'>Reconstruct Network</a></div>";        
     }
 
 ?>
 
-<?php
-    $dName = $f_name . ".dot";
-    if (file_exists($dName)) {
-        echo "<h2>Current Graph</h2>";
-        $lines=file($dName);
-        $dot = implode("",$lines);
-        $high = intval($depth)*200;
-        echo "<div><img src='http://chart.googleapis.com/chart?cht=gv&chl=$dot'/></div>";        
-    }
-
-    $nName = $f_name . ".dot";
-    if (file_exists($nName)) {
-        echo "<h2>Historical Graph</h2>";
-        $lines=file($nName);
-        $dot = implode("",$lines);
-        $high = intval($depth)*200;
-        echo "<div><img src='http://chart.googleapis.com/chart?cht=gv&chl=$dot'/></div>";        
-    }
-?>
+<div id="graph">
+    <h2>Network Graph</h2>
+    <?php
+       echo "<img src='/graph.php?user=$user_name&list=$list_name'/>";
+    ?>
+</div>
 
 <div id="searchForm">
     <h2>Search Again</h2>
@@ -96,7 +90,4 @@
 </body>
 
 </html>
-
-
-
 
