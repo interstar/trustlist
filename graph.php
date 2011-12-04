@@ -22,7 +22,7 @@
     $dot = implode("",$lines);
   
     header('content-type: image/png');
-    $url = 'https://chart.googleapis.com/chart?chid='. $f_name;
+    $url = 'https://chart.googleapis.com/chart?chid='. md5(uniqid(rand(), true));
 
     // Add data, chart type, chart size, and scale to params.
     $chart = array(
