@@ -8,6 +8,7 @@ import useful
 
 import netdb
 import datetime
+import sys # E
 
 auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
 auth.set_access_token(settings.ACCESS_KEY, settings.ACCESS_SECRET)
@@ -29,6 +30,15 @@ trust_list = []
 new_list = []
 dotfile = None
 netfile = None
+
+# E
+
+print args.seed_user
+print args.list_name
+print args.dot_file_name
+print args.net_file_name
+
+
 
 def get_list(seed_user, list_name) :
     try :
@@ -61,6 +71,7 @@ def buildList(seed_user, list_name):
         dotfile.write("}\n")
     
     return trust_list
+    
 
 # CRAWL DEEPER (only call from buildList())
 
@@ -93,6 +104,11 @@ def crawlDeeper(list, list_name):
     return new_list
 
 
+
+
+print buildList(args.seed_user, args.list_name)
+    
+sys.exit()
 
 # Phil's Alternative Crawler
 # An alternative recursive crawler (not using build_list and crawl_deeper) that builds trust-lists into a SetDict (ie. dictionary of sets)

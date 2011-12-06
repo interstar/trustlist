@@ -14,4 +14,4 @@ seed_user = 'webisteme'
 
 # Name of the list to crawl
 
-list_name = 'punkmoney-trusted'
+list_name = 'tne-github'
