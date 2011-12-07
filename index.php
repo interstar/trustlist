@@ -102,7 +102,7 @@
         
     if ($results == True){
         
-        $com = "python trustlist.py --seed $user_name --list $list_name -w --dot $f_name.dot --net $f_name.net > $f_name";
+        $com = "python2.6 trustlist.py --seed $user_name --list $list_name -w > $f_name";
         echo "<!-- $com -->";
         
         if (!(file_exists($f_name))) {

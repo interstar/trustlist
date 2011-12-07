@@ -106,10 +106,6 @@ def crawlDeeper(list, list_name):
 
 
 
-print buildList(args.seed_user, args.list_name)
-    
-sys.exit()
-
 # Phil's Alternative Crawler
 # An alternative recursive crawler (not using build_list and crawl_deeper) that builds trust-lists into a SetDict (ie. dictionary of sets)
 # One set is created for each layer of depth / distance from the root user
@@ -145,6 +141,10 @@ def build(user,list_name) :
 
 
 if __name__ == '__main__' :
+
+    if args.w :
+        args.dot_file_name = "%s.%s.dot" % (args.seed_user,args.list_name)
+        args.net_file_name = "%s.%s.net" % (args.seed_user,args.list_name)
 
     if args.dot_file_name != None:
         dotfile = open(args.dot_file_name, 'w+')
