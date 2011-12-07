@@ -108,12 +108,12 @@
         if (!(file_exists($f_name))) {
             echo "<p class=\"message\">File didn't exist ... Creating Trust Network</p>"; 
             shell_exec($com);
-            echo "<meta http-equiv=\"refresh\" content=\"5\"/>"; #autorefresh in 5 seconds
+            echo "<meta http-equiv=\"refresh\" content=\"25; url=?user=$user_name&list=$list_name\"/>"; #autorefresh in 25 seconds
             echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
         } elseif ($recalc=="1") {
             echo "<p class=\"message\">Recreating Trust Network</p>";
             shell_exec($com);
-            echo "<meta http-equiv=\"refresh\" content=\"5\"/>"; #autorefresh in 5 seconds
+            echo "<meta http-equiv=\"refresh\" content=\"25; url=?user=$user_name&list=$list_name\"/>"; #autorefresh in 25 seconds
             echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
         } else {
             echo "<div id='cloud'>";
