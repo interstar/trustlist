@@ -1,0 +1,270 @@
+/* Divs */
+
+div#box {
+	border-width: 2px;
+	border-color: #d6d5e2;
+	border-style: solid;
+	background-color: #ecf3f0;
+	padding: 0 30px;
+}
+
+div#box2 {
+	border-width: 2px;
+	border-color: lightgray;
+	border-style: solid;
+	background-color: #efefef;
+	padding: 0 30px;
+	padding-top:15px;
+}
+
+.container {
+	padding: 0;
+	position:relative;
+	top:100px;
+}
+
+
+div#horizontal {
+	height: 20%;
+}
+
+div#header {
+	color: #FFF;
+	background-color: #e8eeec;
+	width: 100%;
+	padding: 3;
+	min-height: 30px;
+	
+}
+
+
+div#notification {
+	text-align: center;
+	padding: 0 15px;
+}
+
+div#balances {
+	text-align: center;
+	padding: 0 15px;
+}
+
+div#pay {
+	text-align: left;
+}
+
+div#right {
+	float: right;
+}
+
+div#section {
+	margin-top: -7px;
+}
+
+div#friends {
+	margin-left: 25px;
+}
+
+#main {
+
+    min-height: 475px;
+
+}
+
+img#tiny {
+
+    margin-right:-6px;
+}
+
+
+/* Tables */
+
+table {
+
+    width:100%;
+
+}
+
+table.narrow {
+
+    width:70%;
+}
+
+/* Test */
+
+#footer {
+	min-height: 65px;
+	_height: 65px;
+	/* background: #fff url(/static/images/skinny_dots.gif) repeat-x; */
+	clear: both;
+/* 	margin: 15px 0 0; */
+	width:95%;
+	margin-left:2.5%;
+	margin-right:2.5%;
+}
+
+#footer #copyright {
+	float: right;
+	font-size: 11px;
+	text-align: center;
+	margin: 14px 7px;
+	padding: 2px 0 3px;
+	color: #888;
+	padding-top: 1px;
+	margin-top: 15px;
+}
+
+#footer #copyright .text-img {
+	margin-bottom: -6px;
+}
+
+.footer-col {
+	float: left;
+	max-width: 200px;
+	margin: 15px 20px 20px;
+}
+
+.footer-col p {
+	margin: 0;
+}
+
+.footer-col ul {
+	margin: 0;
+	padding: 0;
+}
+
+.footer-col ul li {
+	list-style: none;
+	font-size: 11px;
+	margin: 2px 5px;
+	padding: 0;
+}
+
+.footer-col ul li.header {
+	font-weight: 700;
+	margin: 2px 0;
+	color: #787878;
+}
+
+.footer-col p,div.footer-col a {
+	font-size: 11px;
+}
+
+.footer-col a {
+	text-decoration: none;
+	color: #838383;
+}
+
+#footer .footer-col a:hover {
+	text-decoration: underline;
+}
+
+
+/* Text */
+a {
+	text-decoration: none;
+	padding-right: 8px;
+	font-family: arial;
+	font-weight: 400;
+	font-size: 14px;
+	color: #5d86a1;
+}
+
+a.menu {
+	text-decoration: none;
+	padding-right: 8px;
+	font-family: arial;
+	font-weight: 400;
+	font-size: 14px;
+	color: #2b658c;
+	
+/*     font-weight: bold; */
+}
+
+h1 {
+	color: #3b4d4f;
+	font-family: "Gill sans";
+	font-size: 24px;
+	padding-top: 0;
+}
+
+
+h4 {
+	color: gray;
+	font-family: "Gill sans";
+	font-size: 24px;
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-bottom: 15px;
+}
+
+
+h2 {
+	color: #3b4d4f;
+	font-family: "Gill sans";
+	font-size: 18px;
+	padding-top: 0;
+	margin-bottom: 0;
+}
+
+p.balance {
+	font-size: 15px;
+	color: gray;
+	padding-top: 0;
+	margin-bottom: 0;
+}
+
+p.menu {
+	font-size: 14px;
+	margin-bottom: 0;
+	margin-left: 5px;
+	color: #000;
+}
+
+p.red {
+	margin-bottom: 0;
+	color: red;
+	font-weight: 700;
+}
+
+p.green {
+	margin-bottom: 0;
+	color: green;
+	font-weight: 700;
+}
+
+
+/* Inputs */
+.payee {
+	font-size: 20px;
+	width: 150px;
+	height: 27px;
+}
+
+.payee2 {
+	font-size: 20px;
+	width: 341px;
+	height: 27px;
+}
+
+.button {
+	top: 7px;
+	right: 7px;
+	position: relative;
+}
+
+/* images */
+.cog {
+	top: 8px;
+	right: 8px;
+	position: absolute;
+}
+
+.icon {
+	bottom: -6px;
+	position: relative;
+}
+
+.memo {
+	bottom: -4px;
+	position: relative;
+}

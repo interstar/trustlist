@@ -1,5 +1,6 @@
 h1, h2, body {
-    font-family:sans;
+    font-family:Arial;
+    font-weight:bold;
 }
 
 p.error
@@ -11,6 +12,26 @@ p.error
 p.message
 {
     font-weight:bold;
+}
+
+div#main {
+
+    top:50px;
+    position:relative;
+    min-height:550px;
+
+}
+
+div#left {
+
+    background-color: white;
+
+}
+
+div#right {
+
+    background-color: white;
+
 }
 
 
