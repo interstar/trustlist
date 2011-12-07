@@ -30,6 +30,13 @@ trust_list = []
 new_list = []
 dotfile = None
 netfile = None
+cloudfile = None
+
+if args.w :
+    names = (args.seed_user,args.list_name)
+    args.dot_file_name = "%s.%s.dot" % names
+    args.net_file_name = "%s.%s.net" % names
+    args.cloud_file_name = "%s.%s" % names
 
 # E
 
@@ -37,6 +44,7 @@ print args.seed_user
 print args.list_name
 print args.dot_file_name
 print args.net_file_name
+print args.cloud_file_name
 
 
 
@@ -142,15 +150,14 @@ def build(user,list_name) :
 
 if __name__ == '__main__' :
 
-    if args.w :
-        args.dot_file_name = "%s.%s.dot" % (args.seed_user,args.list_name)
-        args.net_file_name = "%s.%s.net" % (args.seed_user,args.list_name)
-
+    if args.cloud_file_name != None :
+        cloudfile = open(args.cloud_file_name, 'w+')
+        
     if args.dot_file_name != None:
         dotfile = open(args.dot_file_name, 'w+')
 
     if dotfile : dotfile.write("digraph G {\n")
-
+    
     if (not args.w) :
         # Use James / Eli's original code
         netdb.setupdb()
@@ -175,6 +182,6 @@ if __name__ == '__main__' :
             netfile = open(args.net_file_name, 'w+')
             netfile.write(graph)
         
-        visited.pp()
+        visited.pp(cloudfile)
 
 

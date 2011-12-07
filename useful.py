@@ -18,11 +18,17 @@ class SetDict (dict) :
                 return True
         return False
 
-    def pp(self) :
+    def pp(self,file=None) :
         "Pretty Print"
         for key in self.iterkeys() :
-            print "\n:",key
+            if file :
+                file.write("\n: %s\n"%key)
+            else :
+                print "\n:",key
             for x in self[key] :
-                print x,
+                if file :
+                    file.write("%s "%x)
+                else : 
+                    print x,
         
        
