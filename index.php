@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> 
@@ -6,43 +7,28 @@
     <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 
-<?php 
-    $user_name = $_GET{"user"};
-    $list_name = $_GET{"list"};
-    $recalc = $_GET{"recalc"};
-    
-    $f_name = $user_name . "." . $list_name;
-
-    $dName = $f_name . ".dot";
-?>
-
-</head>
-
 <body>
 
+
 <?php 
-    $userwhite = "/\A([a-zA-Z0-9_]){1,15}\z/";
 
-    #This is actually not complete, apparently almost all characters are allowed.
-    #We can use this more restrictive set though.
-    $listwhite = "/\A([a-zA-Z0-9-_]){1,25}\z/";
-    
-    if (isset($user_name) and isset($list_name)){
+    include( 'application.php' );
 
-        if (!(preg_match($userwhite,$user_name,$matches))) {
-            exit("<p class=\"error\">Invalid user name</p>");
-        }
+    $username = $_GET{"user"};
+    $listname = $_GET{"list"};
+    $recalc = $_GET{"recalc"};   
     
-        if (!(preg_match($listwhite,$list_name,$matches))) {
-            exit("<p class=\"error\">Invalid list name</p>");   
-        }
-        
+    
+    if (isset($username) and isset($listname)){
+
+        $TN = new TrustNet($username, $listname);
         $results = True;
-    
+
     }
+
 ?>
 
-
+<!-- Main container -->
 
 <div id="main" class="span-22 prepend-3">
 
@@ -53,26 +39,22 @@
 
     <?php 
     
-    /* if results */
+    /* If there are results, descrive in subtitle */
     
     if ($results == True){
-    
-        echo "Mapping <a href='http://wiki.thenextedge.org/doku.php?id=twitter_trustlists'>$list_name</a> from user <a href=\"http://www.twitter.com/webisteme\">$user_name</a>"; 
-    
+        $subtitle = "Mapping <a href='http://wiki.thenextedge.org/doku.php?id=twitter_trustlists'> $TN->listname </a> from user <a href=\"http://www.twitter.com/webisteme\"> $TN->username </a>"; 
     } else {
-    
-    /* welcome */
-    
-        echo "A tool for mapping trust on Twitter.";
-    
+        $subtitle = "A tool for mapping trust on Twitter.";
     }
+    
+    echo $subtitle;
     
     ?>
 
     </h2>
     
     
- <!--    Left side -->
+    <!--    LEFT SIDE -->
           
     <div id="left" class="span-10">  
 
@@ -81,7 +63,7 @@
         <h3>Search</h3>
         <p class="success">Enter a Twitter username and list to start crawling from.</p>
         <br>
-        <form method="GET" action="/">
+        <form method="GET" action="index.php">
             <h3 style="color:grey">User Name <br><input type="text" name="user"/ placeholder="@username"> <br/>
             <h3 style="color:grey">List Name <br><input type="text" name="list" placeholder="e.g. tne-github"/> </p>
             <input type="submit" value="Crawl"/>
@@ -91,55 +73,40 @@
     </div>
 
     
-    <!-- Right side -->
+    <!-- RIGHT SIDE -->
     
     <div id="right" class="span-10 prepend-2 last">
 
     <?php
     
-    
-        
-        
     if ($results == True){
+               
+        if ($TN->checkExists() == False) {
         
-        $com = "python2.6 trustlist.py --seed $user_name --list $list_name -w ";
-        echo "<!-- $com -->";
+                    $TN->buildNet();
+                    
+                    echo "<p class=\"message\">File didn't exist ... Creating Trust Network</p>"; 
+                    echo "<meta http-equiv=\"refresh\" content=\"25; url=?user=$TN->username&list=$TN->listname\"/>"; #autorefresh in 25 seconds
+                    echo "<div><a href='?user=$TN->username&list=$TN->listname'>Reload</a></div>";
         
-        if (!(file_exists($f_name))) {
-            echo "<p class=\"message\">File didn't exist ... Creating Trust Network</p>"; 
-            shell_exec($com);
-            echo "<meta http-equiv=\"refresh\" content=\"25; url=?user=$user_name&list=$list_name\"/>"; #autorefresh in 25 seconds
-            echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
-        } elseif ($recalc=="1") {
-            echo "<p class=\"message\">Recreating Trust Network</p>";
-            shell_exec($com);
-            echo "<meta http-equiv=\"refresh\" content=\"25; url=?user=$user_name&list=$list_name\"/>"; #autorefresh in 25 seconds
-            echo "<div><a href='?user=$user_name&list=$list_name'>Reload</a></div>";
-        } else {
-            echo "<div id='cloud'>";
-            $lines = file($f_name);
-            $depth = "-1";
-            foreach ($lines as $line) {
-                if ($line[0] == ":") {
-                    $depth = $depth+1;
+                } elseif ($recalc=="1") {
+                
+                    $TN->buildNet();
+                
+                    echo "<p class=\"message\">Recreating Trust Network</p>";
+                    echo "<meta http-equiv=\"refresh\" content=\"25; url=?user=$TN->username&list=$TN->listname\"/>"; #autorefresh in 25 seconds
+                    echo "<div><a href='?user=$TN->username&list=$TN->listname'>Reload</a></div>";
+                      
                 } else {
-                    if ($depth < 0) { continue; }
-                    $names = split(" ",$line);
-                    foreach ($names as $name) {
-                        echo "<span class='d$depth'><a href='http://twitter.com/#!/$name'>$name</a> </span>";
-                    }
-                }
-            }
-            echo "</div>";
-            
-        }
         
-    } else {
-    
-    /* show this on welcome */
+                    $TN->displayNet();
+        
+                }
+                
+            } else {
 
-    ?>
-    
+
+    ?>    
     
     <h3>What is this?</h3>
     
@@ -169,17 +136,11 @@
     ?>
     
     <?php
-        $dName = $f_name . ".dot";
-        if (file_exists($dName)) {
-            echo "<h3>TrustNet for list <b>$list_name</b></h3>";
-            echo "<br />";
-            echo "<div><img width=\"100%\" src='/graph.php?user=$user_name&list=$list_name'/></div>";
-            
-            echo "<br><br>";
-            
-            echo "<p style=\"display:inline\">See <a href='/graph.php?user=$user_name&list=$list_name'>larger</a> | </p>";
-            echo "<a href='?user=$user_name&list=$list_name&recalc=1'>Rebuild</a> | ";       
-            echo "<a href='index.php'>Clear</a>";
+    
+        if ($results == True){
+
+            $TN->displayCloud();
+        
         }
     
     ?>
