@@ -52,7 +52,7 @@ class TrustNet {
     
     public function buildNet() {
 
-        $com = "python trustlist.py --seed $this->username --list $this->listname -w ";
+        $com = "python2.6 trustlist.py --seed $this->username --list $this->listname -w ";
         shell_exec($com);
     
     }
